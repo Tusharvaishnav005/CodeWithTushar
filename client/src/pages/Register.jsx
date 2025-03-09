@@ -1,20 +1,24 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../store/auth";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
-export const Login = () => {
+export const Register = () => {
   const [user, setUser] = useState({
     username: "",
+    email: "",
+    phone: "",
     password: "",
   });
 
   const navigate = useNavigate();
-  const {storeTokenInLS, API} = useAuth();
-  // let handle the input field value
-  const URL = `${API}/api/auth/login`;
+  const { storeTokenInLS, API } = useAuth();
 
+  const URL = `${API}/api/auth/register`;
+
+  // handling the input values
   const handleInput = (e) => {
+    console.log(e);
     let name = e.target.name;
     let value = e.target.value;
 
@@ -24,10 +28,10 @@ export const Login = () => {
     });
   };
 
- 
-   // let handle the form submission
-   const handleSubmit = async (e) => {
+  // handling the form submission
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(user);
     try {
       const response = await fetch(URL, {
         method: "POST",
@@ -36,39 +40,23 @@ export const Login = () => {
         },
         body: JSON.stringify(user),
       });
-      // console.log("Login form",response);
-      
-      // if (response.ok) {
-      //   alert("login succesfull")
-      //   const responseData = await response.json();
-      //   storeTokenInLS(responseData.token);
-      //   setUser({ email: "", password: "" });
-        
-      //   navigate("/");
-      // }else{
-      //   toast.error("invalid email address")
-      //   console.log("invalid Credential");
-        
-      // }
-      console.log("login form", response);
 
       const res_data = await response.json();
+      console.log("res from server", res_data.extraDetails);
 
       if (response.ok) {
-        // alert("Login Successful");
+        // stored the token in localhost
         storeTokenInLS(res_data.token);
-
-        setUser({ email: "", password: "" });
-        toast.success("Login successful");
+        setUser({ username: "", email: "", phone: "", password: "" });
+        toast.success("Registration successful");
         navigate("/");
       } else {
         toast.error(
           res_data.extraDetails ? res_data.extraDetails : res_data.message
         );
-        console.log("invalid credential");
       }
     } catch (error) {
-      console.log(error);
+      console.log("register ", error);
     }
   };
 
@@ -78,27 +66,59 @@ export const Login = () => {
         <main>
           <div className="section-registration">
             <div className="container grid grid-two-cols">
-              <div className="registration-image reg-img">
+              <div className="registration-image">
                 <img
                   src="/images/register.png"
-                  alt="a nurse with a cute look"
-                  width="400"
+                  alt="a girl is trying to do registration"
+                  width="500"
                   height="500"
                 />
               </div>
-              {/* our main registration code  */}
+
+              {/* let tackle registration form  */}
               <div className="registration-form">
-                <h1 className="main-heading mb-3">Login form</h1>
+                <h1 className="main-heading mb-3">registration form</h1>
                 <br />
+
                 <form onSubmit={handleSubmit}>
+                  <div>
+                    <label htmlFor="username">username</label>
+                    <input
+                      type="text"
+                      name="username"
+                      placeholder="username"
+                      id="username"
+                      required
+                      autoComplete="off"
+                      value={user.username}
+                      onChange={handleInput}
+                    />
+                  </div>
+
                   <div>
                     <label htmlFor="email">email</label>
                     <input
-                      type="text"
+                      type="email"
                       name="email"
+                      placeholder="enter your email"
+                      id="email"
+                      required
+                      autoComplete="off"
                       value={user.email}
                       onChange={handleInput}
-                      placeholder="email"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="phone">phone</label>
+                    <input
+                      type="number"
+                      name="phone"
+                      placeholder="phone"
+                      id="phone"
+                      required
+                      autoComplete="off"
+                      value={user.phone}
+                      onChange={handleInput}
                     />
                   </div>
 
@@ -107,14 +127,18 @@ export const Login = () => {
                     <input
                       type="password"
                       name="password"
+                      placeholder="password"
+                      id="password"
+                      required
+                      autoComplete="off"
                       value={user.password}
                       onChange={handleInput}
-                      placeholder="password"
                     />
                   </div>
+
                   <br />
                   <button type="submit" className="btn btn-submit">
-                    Login Now
+                    Register Now
                   </button>
                 </form>
               </div>
