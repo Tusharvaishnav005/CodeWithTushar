@@ -11,8 +11,22 @@ const serviceRoute = require("./router/service-router");
 const adminRoute = require("./router/admin-router");
 const Service = require("./models/service-model");
 
+// const corsOptions = {
+//   origin: "http://localhost:5173", 
+//   methods: "GET, POST, PUT, DELETE, PATCH, HEAD",
+//   credentials: true,
+// };
 const corsOptions = {
-  origin: "http://localhost:5173", 
+  // origin: "http://localhost:5173",
+  origin: (origin, callback) => {
+    // Check if the origin is allowed
+    const allowedOrigins = [
+      "http://localhost:5173",
+      
+    ];
+    const isAllowed = allowedOrigins.includes(origin);
+    callback(null, isAllowed ? origin : false);
+  },
   methods: "GET, POST, PUT, DELETE, PATCH, HEAD",
   credentials: true,
 };
@@ -33,7 +47,7 @@ app.use("/api/admin", adminRoute);
 //   res.status(200).json({ msg: "registration successful" });
 // });
 app.use(errorMiddleware);
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 connectDb().then(()=>{
   app.listen(PORT, () => {
     console.log(`server is running at port: ${PORT}`);
