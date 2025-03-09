@@ -33,7 +33,7 @@ app.use("/api/admin", adminRoute);
 //   res.status(200).json({ msg: "registration successful" });
 // });
 app.use(errorMiddleware);
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 connectDb().then(()=>{
   app.listen(PORT, () => {
     console.log(`server is running at port: ${PORT}`);
