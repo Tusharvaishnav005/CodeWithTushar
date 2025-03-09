@@ -10,8 +10,10 @@ export const Login = () => {
   });
 
   const navigate = useNavigate();
-  const {storeTokenInLS} = useAuth();
+  const {storeTokenInLS, API} = useAuth();
   // let handle the input field value
+  const URL = `${API}/api/auth/login`;
+
   const handleInput = (e) => {
     let name = e.target.name;
     let value = e.target.value;
@@ -27,7 +29,7 @@ export const Login = () => {
    const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
+      const response = await fetch(URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
