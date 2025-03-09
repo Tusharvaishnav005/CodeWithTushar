@@ -22,7 +22,7 @@ const corsOptions = {
     // Check if the origin is allowed
     const allowedOrigins = [
       "http://localhost:5173",
-      
+      "https://code-with-tushar.vercel.app",
     ];
     const isAllowed = allowedOrigins.includes(origin);
     callback(null, isAllowed ? origin : false);
