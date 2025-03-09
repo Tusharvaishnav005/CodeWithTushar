@@ -16,22 +16,46 @@ const Service = require("./models/service-model");
 //   methods: "GET, POST, PUT, DELETE, PATCH, HEAD",
 //   credentials: true,
 // };
+// const corsOptions = {
+//   // origin: "http://localhost:5173",
+//   origin: (origin, callback) => {
+//     // Check if the origin is allowed
+//     const allowedOrigins = [
+//       "http://localhost:5173",
+//       "https://code-with-tushar.vercel.app",
+//     ];
+//     const isAllowed = allowedOrigins.includes(origin);
+//     callback(null, isAllowed ? origin : false);
+//   },
+//   methods: "GET, POST, PUT, DELETE, PATCH, HEAD",
+//   credentials: true,
+// };
+
+// app.use(cors(corsOptions));
 const corsOptions = {
-  // origin: "http://localhost:5173",
   origin: (origin, callback) => {
-    // Check if the origin is allowed
     const allowedOrigins = [
       "http://localhost:5173",
       "https://code-with-tushar.vercel.app",
     ];
-    const isAllowed = allowedOrigins.includes(origin);
-    callback(null, isAllowed ? origin : false);
+    
+    // Allow requests with no `origin` (e.g., Postman) and from allowed origins
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
   },
-  methods: "GET, POST, PUT, DELETE, PATCH, HEAD",
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   credentials: true,
 };
 
+// Enable CORS
 app.use(cors(corsOptions));
+
+// Handle Preflight Requests
+app.options("*", cors(corsOptions));
+
 // app.use(cors);
 app.use(express.json());
 
